@@ -16,18 +16,27 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 apply from: "$rootDir/ktlint.gradle"
 
+version = "1.0.0"
+group = "com.mohsenoid.closetome"
+
+def siteUrl = "http://mohsenoid.com/CloseToMe"
+def gitUrl = "https://github.com/mohsenoid/CloseToMe.git"
+
 android {
     compileSdkVersion rootProject.ext.compile_sdk_version
+    resourcePrefix "closetome__"
 
     defaultConfig {
         minSdkVersion rootProject.ext.min_sdk_version
         targetSdkVersion rootProject.ext.compile_sdk_version
 
         versionCode 1
-        versionName "1.0.0"
+        versionName version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -60,6 +69,61 @@ android {
 }
 
 check.dependsOn ktlint
+
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "CloseToMe"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                // Add your description here
+                name 'Android CloseToMe BLE Library'
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name 'Apache License, Version 2.0'
+                        url 'https://opensource.org/licenses/Apache-2.0'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'mmirhoseini'
+                        name 'Mohsen Mirhoseini'
+                        email 'msn.mirhoseini@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+
+                }
+            }
+        }
+    }
+}
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

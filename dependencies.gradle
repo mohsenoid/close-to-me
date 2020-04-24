@@ -45,4 +45,8 @@ ext {
     junit_version = '4.12'
     mockito_version = '2.27.0'
     mockito_kotlin_version = '2.1.0'
+
+    // Bintray
+    bintray_version = '1.6'
+    maven_gradle_version = '1.4.1'
 }
