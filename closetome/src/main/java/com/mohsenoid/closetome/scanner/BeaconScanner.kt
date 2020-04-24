@@ -14,5 +14,17 @@
  * limitations under the License.
  */
 
-rootProject.name='CloseToMe'
-include ':closetome', ':sample-app'
+package com.mohsenoid.closetome.scanner
+
+import androidx.lifecycle.LiveData
+import com.mohsenoid.closetome.CloseToMeCallback
+import com.mohsenoid.closetome.CloseToMeState
+
+internal interface BeaconScanner {
+
+    val state: LiveData<CloseToMeState>
+
+    fun start(callback: CloseToMeCallback? = null)
+
+    fun stop(callback: CloseToMeCallback? = null)
+}

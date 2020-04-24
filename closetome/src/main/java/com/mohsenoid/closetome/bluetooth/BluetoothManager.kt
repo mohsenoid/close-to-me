@@ -14,5 +14,16 @@
  * limitations under the License.
  */
 
-rootProject.name='CloseToMe'
-include ':closetome', ':sample-app'
+package com.mohsenoid.closetome.bluetooth
+
+import androidx.lifecycle.LiveData
+import com.mohsenoid.closetome.CloseToMeCallback
+
+internal interface BluetoothManager {
+
+    val isEnabled: LiveData<Boolean>
+
+    fun isBluetoothEnabled(): Boolean
+
+    fun enableBluetooth(callback: CloseToMeCallback?)
+}

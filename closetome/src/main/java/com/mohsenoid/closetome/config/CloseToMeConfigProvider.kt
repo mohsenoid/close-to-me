@@ -14,5 +14,16 @@
  * limitations under the License.
  */
 
-rootProject.name='CloseToMe'
-include ':closetome', ':sample-app'
+package com.mohsenoid.closetome.config
+
+import android.content.Context
+
+interface CloseToMeConfigProvider {
+
+    val context: Context
+    val userUuid: String
+    val manufacturerId: Int
+    val manufacturerUuid: String
+    val visibilityTimeout: Long
+    val visibilityDistance: Double
+}

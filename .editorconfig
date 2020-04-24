@@ -1,0 +1,15 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{kt, kts}]
+max_line_length = 150
+
+# Disable Ktlint import ordering temporarily because of AndroidStudio Kotlin formatting bug. read more here:
+# https://youtrack.jetbrains.com/issue/KT-10974
+disabled_rules = import-ordering

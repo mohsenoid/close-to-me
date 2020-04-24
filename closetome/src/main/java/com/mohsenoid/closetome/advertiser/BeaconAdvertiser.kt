@@ -14,5 +14,17 @@
  * limitations under the License.
  */
 
-rootProject.name='CloseToMe'
-include ':closetome', ':sample-app'
+package com.mohsenoid.closetome.advertiser
+
+import androidx.lifecycle.LiveData
+import com.mohsenoid.closetome.CloseToMeCallback
+import com.mohsenoid.closetome.CloseToMeState
+
+internal interface BeaconAdvertiser {
+
+    val state: LiveData<CloseToMeState>
+
+    fun start(callback: CloseToMeCallback? = null)
+
+    fun stop(callback: CloseToMeCallback? = null)
+}

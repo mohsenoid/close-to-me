@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 apply from: "$rootDir/ktlint.gradle"
 
@@ -24,8 +23,6 @@ android {
     compileSdkVersion rootProject.ext.compile_sdk_version
 
     defaultConfig {
-        applicationId "com.mohsenoid.closetome"
-
         minSdkVersion rootProject.ext.min_sdk_version
         targetSdkVersion rootProject.ext.compile_sdk_version
 
@@ -33,6 +30,7 @@ android {
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     buildTypes {
@@ -40,14 +38,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-
-    viewBinding {
-        enabled = true
-    }
-
-    dataBinding {
-        enabled = true
     }
 
     testOptions {
@@ -72,24 +62,12 @@ android {
 check.dependsOn ktlint
 
 dependencies {
-    implementation project(path: ':closetome')
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_android_version"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_test_version"
 
     implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
-    implementation "androidx.core:core-ktx:$androidx_core_ktx_version"
-    implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_version"
-
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidx_lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidx_lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidx_lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-service:$androidx_lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$androidx_lifecycle_version"
-    kapt "android.arch.lifecycle:common-java8:$androidx_lifecycle_version"
-    testImplementation "androidx.arch.core:core-testing:$androidx_arch_version"
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$androidx_testext_version"

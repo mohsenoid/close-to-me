@@ -14,5 +14,8 @@
  * limitations under the License.
  */
 
-rootProject.name='CloseToMe'
-include ':closetome', ':sample-app'
+package com.mohsenoid.closetome
+
+enum class CloseToMeState {
+    STOPPED, STARTED
+}
