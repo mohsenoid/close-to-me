@@ -123,7 +123,7 @@ internal class BeaconScannerImpl(
             val majorSecondByte = scanRecord?.bytes?.get(23)
 
             if (majorFirstByte != null && majorSecondByte != null) {
-                major = (majorFirstByte.toInt() shl 8 and majorFirstByte.toInt()).toUShort()
+                major = ((majorFirstByte.toInt() shl 8) + majorSecondByte.toInt()).toUShort()
             }
         } finally {
             return major
@@ -138,7 +138,7 @@ internal class BeaconScannerImpl(
             val minorSecondByte = scanRecord?.bytes?.get(25)
 
             if (minorFirstByte != null && minorSecondByte != null) {
-                minor = (minorFirstByte.toInt() shl 8 and minorFirstByte.toInt()).toUShort()
+                minor = ((minorFirstByte.toInt() shl 8) + minorSecondByte.toInt()).toUShort()
             }
         } finally {
             return minor

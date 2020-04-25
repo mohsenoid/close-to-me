@@ -122,12 +122,15 @@ class MainActivity : AppCompatActivity() {
                 })
 
                 it.results.observe(this, Observer { beacons ->
-                    binding.result.text = beacons.values.joinToString("\n--------------------------------\n") {
-                        "User: ${it.userUuid}\n" +
-                            "isVisible: ${it.isVisible}\n" +
-                            "isNear: ${it.isNear}\n" +
-                            "MinDistance: ${"%.2f".format(it.minDistanceInMeter)}m\n" +
-                            "LastDistance: ${"%.2f".format(it.distanceInMeter)}m"
+                    binding.result.text = beacons.values.joinToString("\n--------------------------------\n") { beacon ->
+                        "User: ${beacon.userUuid}\n" +
+                            "manufacturer: ${beacon.manufacturerUuid}\n" +
+                            "major: ${beacon.major}\n" +
+                            "minor: ${beacon.minor}\n" +
+                            "MinDistance: ${"%.2f".format(beacon.minDistanceInMeter)}m\n" +
+                            "LastDistance: ${"%.2f".format(beacon.distanceInMeter)}m\n" +
+                            "isVisible: ${beacon.isVisible}\n" +
+                            "isNear: ${beacon.isNear}"
                     }
 
                     log("Result: $beacons")
