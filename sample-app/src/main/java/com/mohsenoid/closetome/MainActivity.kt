@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     private val userUuid = UUID.randomUUID()
 
-    private var closeToMeManager: CloseToMeManager? = null
+    private var closeToMe: CloseToMe? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initCloseToMe() {
-        closeToMeManager = CloseToMeManager.Builder(this, manufacturerUuid)
+        closeToMe = CloseToMe.Builder(this, manufacturerUuid)
             .setUserUuid(userUuid)
             .setMajor(1U)
             .setMinor(1U)
@@ -134,10 +134,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onStartClick(v: View) {
-        if (closeToMeManager?.isBluetoothEnabled?.value != true) {
+        if (closeToMe?.isBluetoothEnabled?.value != true) {
             log("Enabling bluetooth...")
 
-            closeToMeManager?.enableBluetooth(object : CloseToMeCallback {
+            closeToMe?.enableBluetooth(object : CloseToMeCallback {
                 override fun onSuccess() {
                     log("Bluetooth is on now")
                 }
@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         } else {
-            closeToMeManager?.start(object : CloseToMeCallback {
+            closeToMe?.start(object : CloseToMeCallback {
                 override fun onSuccess() {
                     log("Beacon started successfully!")
                 }
@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onStopClick(v: View) {
-        closeToMeManager?.stop(object : CloseToMeCallback {
+        closeToMe?.stop(object : CloseToMeCallback {
             override fun onSuccess() {
                 log("Beacon stopped successfully!")
             }
@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        closeToMeManager?.stop()
+        closeToMe?.stop()
         super.onPause()
     }
 

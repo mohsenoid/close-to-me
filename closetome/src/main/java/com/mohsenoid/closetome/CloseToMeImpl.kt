@@ -30,13 +30,13 @@ import com.mohsenoid.closetome.scanner.BeaconScanner
 import com.mohsenoid.closetome.scanner.BeaconScannerImpl
 import com.mohsenoid.closetome.utils.CombinedLiveData
 
-internal class CloseToMeManagerImpl(
+internal class CloseToMeImpl(
     private val context: Context,
     private val bluetoothManager: BluetoothManager,
     private val advertiser: BeaconAdvertiser,
     private val scanner: BeaconScanner,
     private val resultsCache: BeaconResultsCache
-) : CloseToMeManager {
+) : CloseToMe {
 
     override val state: MediatorLiveData<CloseToMeState> =
         CombinedLiveData(scanner.state, advertiser.state) { scannerState, advertiserState, currentValue ->
@@ -128,7 +128,7 @@ internal class CloseToMeManagerImpl(
             minor: UShort,
             visibilityTimeout: Long,
             visibilityDistance: Double
-        ): CloseToMeManager {
+        ): CloseToMe {
 
             val bluetoothManager = BluetoothManagerImpl(context)
 
@@ -138,7 +138,7 @@ internal class CloseToMeManagerImpl(
 
             val scanner = BeaconScannerImpl(manufacturerId, manufacturerUuid, visibilityDistance, resultsCache)
 
-            return CloseToMeManagerImpl(context, bluetoothManager, advertiser, scanner, resultsCache)
+            return CloseToMeImpl(context, bluetoothManager, advertiser, scanner, resultsCache)
         }
     }
 }
