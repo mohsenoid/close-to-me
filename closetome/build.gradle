@@ -27,6 +27,11 @@ group = "com.mohsenoid.closetome"
 def siteUrl = "http://mohsenoid.com/CloseToMe"
 def gitUrl = "https://github.com/mohsenoid/CloseToMe.git"
 
+// Load keystore properties if available!
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion rootProject.ext.compile_sdk_version
     resourcePrefix "closetome__"
@@ -71,12 +76,9 @@ android {
 check.dependsOn ktlint
 
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
+    user = keystoreProperties["bintray.user"] ? keystoreProperties["bintray.user"] : System.getenv("BINTRAY_USER")
+    key = keystoreProperties["bintray.apikey"] ? keystoreProperties["bintray.apikey"] : System.getenv("BINTRAY_APIKEY")
 
     configurations = ['archives']
     pkg {
