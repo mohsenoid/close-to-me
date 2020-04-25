@@ -21,7 +21,7 @@ apply plugin: 'com.jfrog.bintray'
 
 apply from: "$rootDir/ktlint.gradle"
 
-version = "1.0.1"
+version = "1.0.2"
 group = "com.mohsenoid.closetome"
 
 def siteUrl = "http://mohsenoid.com/CloseToMe"
@@ -40,7 +40,7 @@ android {
         minSdkVersion rootProject.ext.min_sdk_version
         targetSdkVersion rootProject.ext.compile_sdk_version
 
-        versionCode 2
+        versionCode 3
         versionName version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
