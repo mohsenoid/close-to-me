@@ -21,7 +21,7 @@ apply plugin: 'com.jfrog.bintray'
 
 apply from: "$rootDir/ktlint.gradle"
 
-version = "1.0.0"
+version = "1.0.1"
 group = "com.mohsenoid.closetome"
 
 def siteUrl = "http://mohsenoid.com/CloseToMe"
@@ -35,7 +35,7 @@ android {
         minSdkVersion rootProject.ext.min_sdk_version
         targetSdkVersion rootProject.ext.compile_sdk_version
 
-        versionCode 1
+        versionCode 2
         versionName version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -123,6 +123,36 @@ install {
             }
         }
     }
+}
+
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier.set('sources')
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    archiveClassifier.set('javadoc')
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = javadoc.destinationDir
+}
+
+javadocJar {
+    dependsOn(dokkaJavadoc)
 }
 
 dependencies {

@@ -20,20 +20,20 @@ import android.os.ParcelUuid
 import java.nio.ByteBuffer
 import java.util.UUID
 
-internal fun String.toParcelUuid(): ParcelUuid? =
+fun String.toParcelUuid(): ParcelUuid? =
     ParcelUuid.fromString(this)
 
-internal fun String.toUuid(): UUID? =
+fun String.toUuid(): UUID? =
     UUID.fromString(this)
 
-internal fun UUID.toBytes(): ByteArray {
+fun UUID.toBytes(): ByteArray {
     val bb: ByteBuffer = ByteBuffer.wrap(ByteArray(16))
     bb.putLong(mostSignificantBits)
     bb.putLong(leastSignificantBits)
     return bb.array()
 }
 
-internal fun ByteArray.toUUID(): UUID? {
+fun ByteArray.toUUID(): UUID? {
     val byteBuffer = ByteBuffer.wrap(this)
     val high = byteBuffer.long
     val low = byteBuffer.long

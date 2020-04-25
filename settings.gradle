@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-rootProject.name='CloseToMe'
+rootProject.name = 'CloseToMe'
 include ':closetome', ':sample-app'
