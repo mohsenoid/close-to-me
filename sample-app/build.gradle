@@ -24,7 +24,7 @@ android {
     compileSdkVersion rootProject.ext.compile_sdk_version
 
     defaultConfig {
-        applicationId "com.mohsenoid.closetome"
+        applicationId "com.mohsenoid.closetome.sample"
 
         minSdkVersion rootProject.ext.min_sdk_version
         targetSdkVersion rootProject.ext.compile_sdk_version

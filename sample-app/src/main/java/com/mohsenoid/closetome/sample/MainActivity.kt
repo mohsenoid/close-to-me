@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.mohsenoid.closetome
+package com.mohsenoid.closetome.sample
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -28,7 +27,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.mohsenoid.closetome.databinding.MainActivityBinding
+import com.mohsenoid.closetome.CloseToMe
+import com.mohsenoid.closetome.CloseToMeCallback
+import com.mohsenoid.closetome.CloseToMeState
+import com.mohsenoid.closetome.sample.databinding.MainActivityBinding
 import java.util.UUID
 
 @ExperimentalUnsignedTypes
@@ -61,8 +63,8 @@ class MainActivity : AppCompatActivity() {
     private fun initUi() {
         binding.user.text = "User: $userUuid"
         binding.log.movementMethod = ScrollingMovementMethod()
-        binding.start.setOnClickListener(::onStartClick)
-        binding.stop.setOnClickListener(::onStopClick)
+        binding.start.setOnClickListener { onStartClick() }
+        binding.stop.setOnClickListener { onStopClick() }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -120,12 +122,15 @@ class MainActivity : AppCompatActivity() {
                 })
 
                 it.results.observe(this, Observer { beacons ->
-                    binding.result.text = beacons.values.joinToString("\n--------------------------------\n") {
-                        "User: ${it.userUuid}\n" +
-                            "isVisible: ${it.isVisible}\n" +
-                            "isNear: ${it.isNear}\n" +
-                            "MinDistance: ${"%.2f".format(it.minDistanceInMeter)}m\n" +
-                            "LastDistance: ${"%.2f".format(it.distanceInMeter)}m"
+                    binding.result.text = beacons.values.joinToString("\n--------------------------------\n") { beacon ->
+                        "User: ${beacon.userUuid}\n" +
+                            "manufacturer: ${beacon.manufacturerUuid}\n" +
+                            "major: ${beacon.major}\n" +
+                            "minor: ${beacon.minor}\n" +
+                            "MinDistance: ${"%.2f".format(beacon.minDistanceInMeter)}m\n" +
+                            "LastDistance: ${"%.2f".format(beacon.distanceInMeter)}m\n" +
+                            "isVisible: ${beacon.isVisible}\n" +
+                            "isNear: ${beacon.isNear}"
                     }
 
                     log("Result: $beacons")
@@ -133,7 +138,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-    private fun onStartClick(v: View) {
+    private fun onStartClick() {
         if (closeToMe?.isBluetoothEnabled?.value != true) {
             log("Enabling bluetooth...")
 
@@ -159,7 +164,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onStopClick(v: View) {
+    private fun onStopClick() {
         closeToMe?.stop(object : CloseToMeCallback {
             override fun onSuccess() {
                 log("Beacon stopped successfully!")
