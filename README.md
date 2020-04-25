@@ -1,6 +1,8 @@
 # CloseToMe
 CloseToMe Android BLE library
 
+![screenshot](/screenshot.png)
+
 ## How it works
 This library uses Android BLE API to advertise a Beacon and scan for other Beacons at the same time.
 This mechanism allows you to have an application which is aware of other clients getting close to current device.
@@ -13,13 +15,13 @@ Grab via Maven:
 <dependency>
   <groupId>com.mohsenoid.closetome</groupId>
   <artifactId>closetome</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <type>pom</type>
 </dependency>
 ```
 or Gradle:
 ```groovy
-implementation 'com.mohsenoid.closetome:closetome:1.0.0'
+implementation 'com.mohsenoid.closetome:closetome:1.0.1'
 ```
 
 ## License
