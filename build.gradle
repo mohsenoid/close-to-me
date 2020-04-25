@@ -20,11 +20,12 @@ buildscript {
     repositories {
         google()
         jcenter()
-
     }
+    
     dependencies {
         classpath "com.android.tools.build:gradle:$tools_build_gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$doka_version"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintray_version"
         classpath "com.github.dcendents:android-maven-gradle-plugin:$maven_gradle_version"
     }
@@ -34,8 +35,13 @@ allprojects {
     repositories {
         google()
         jcenter()
-
     }
+
+    tasks.withType(Javadoc).all {
+        enabled = false
+    }
+
+    apply plugin: 'org.jetbrains.dokka'
 }
 
 task clean(type: Delete) {
