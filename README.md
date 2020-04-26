@@ -1,4 +1,4 @@
-# CloseToMe
+# CloseToMe [![Actions Status](https://github.com/mohsenoid/CloseToMe/workflows/Android%20CI/badge.svg)](https://github.com/mohsenoid/CloseToMe/actions)
 CloseToMe Android BLE library
 
 ![CloseToMe Logo](/logo.png)
