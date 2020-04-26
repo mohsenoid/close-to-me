@@ -1,12 +1,14 @@
 # CloseToMe
 CloseToMe Android BLE library
 
-![screenshot](/screenshot.png)
+![CloseToMe Logo](/logo.png)
 
 ## How it works
 This library uses Android BLE API to advertise a Beacon and scan for other Beacons at the same time.
 This mechanism allows you to have an application which is aware of other clients getting close to current device.
 There can be many use cases for this library including contact tracing. 
+
+![screenshot1](/screenshot1.png) ![screenshot2](/screenshot2.png)
 
 ## USAGE
 
@@ -25,7 +27,6 @@ implementation 'com.mohsenoid.closetome:closetome:1.0.2'
 ```
 
 ## License
--------
 
 Copyright 2020 Mohsen Mirhoseini
 
