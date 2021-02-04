@@ -21,16 +21,11 @@ apply plugin: 'com.jfrog.bintray'
 
 apply from: "$rootDir/ktlint.gradle"
 
-version = "1.0.2"
-group = "com.mohsenoid.closetome"
+version = "1.0.3"
+group = "com.mohsenoid.close-to-me"
 
-def siteUrl = "http://mohsenoid.com/CloseToMe"
-def gitUrl = "https://github.com/mohsenoid/CloseToMe.git"
-
-// Load keystore properties if available!
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-if (keystorePropertiesFile.exists()) keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+def siteUrl = "http://mohsenoid.com/close-to-me"
+def gitUrl = "https://github.com/mohsenoid/close-to-me.git"
 
 android {
     compileSdkVersion rootProject.ext.compile_sdk_version
@@ -40,7 +35,7 @@ android {
         minSdkVersion rootProject.ext.min_sdk_version
         targetSdkVersion rootProject.ext.compile_sdk_version
 
-        versionCode 3
+        versionCode 4
         versionName version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -77,13 +72,13 @@ check.dependsOn ktlint
 
 
 bintray {
-    user = keystoreProperties["bintray.user"] ? keystoreProperties["bintray.user"] : System.getenv("BINTRAY_USER")
-    key = keystoreProperties["bintray.apikey"] ? keystoreProperties["bintray.apikey"] : System.getenv("BINTRAY_APIKEY")
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_APIKEY")
 
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "CloseToMe"
+        name = "close-to-me"
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
@@ -111,9 +106,9 @@ install {
                 }
                 developers {
                     developer {
-                        id 'mmirhoseini'
+                        id 'mohsenoid'
                         name 'Mohsen Mirhoseini'
-                        email 'msn.mirhoseini@gmail.com'
+                        email 'contact@mohsenoid.com'
                     }
                 }
                 scm {
