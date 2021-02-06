@@ -16,16 +16,17 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 apply from: "$rootDir/ktlint.gradle"
 
+group = "com.mohsenoid.${name}"
 version = "1.0.3"
-group = "com.mohsenoid.close-to-me"
+description = "Android CloseToMe BLE Library"
 
-def siteUrl = "http://mohsenoid.com/close-to-me"
-def gitUrl = "https://github.com/mohsenoid/close-to-me.git"
+def siteUrl = "http://mohsenoid.com/${name}/"
+def gitUrl = "https://github.com/mohsenoid/${name}.git"
 
 android {
     compileSdkVersion rootProject.ext.compile_sdk_version
@@ -70,56 +71,17 @@ android {
 
 check.dependsOn ktlint
 
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_android_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_test_version"
 
-bintray {
-    user = System.getenv("BINTRAY_USER")
-    key = System.getenv("BINTRAY_APIKEY")
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
 
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = "close-to-me"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-    }
-}
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-
-                // Add your description here
-                name 'Android CloseToMe BLE Library'
-                url siteUrl
-
-                // Set your license
-                licenses {
-                    license {
-                        name 'Apache License, Version 2.0'
-                        url 'https://opensource.org/licenses/Apache-2.0'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'mohsenoid'
-                        name 'Mohsen Mirhoseini'
-                        email 'contact@mohsenoid.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-
-                }
-            }
-        }
-    }
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$androidx_testext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_testespresso_version"
 }
 
 
@@ -143,24 +105,67 @@ artifacts {
     archives sourcesJar
 }
 
-task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    outputFormat = 'javadoc'
-    outputDirectory = javadoc.destinationDir
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId = project.group
+            artifactId = project.name
+            version = project.version
+
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = project.name
+                packaging = 'aar'
+                description = project.description
+                url = siteUrl
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'mohsenoid'
+                        name = 'Mohsen Mirhoseini'
+                        email = 'contact@mohsenoid.com'
+                    }
+                }
+                scm {
+                    connection = gitUrl
+                    developerConnection = gitUrl
+                    url = siteUrl
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            // change URLs to point to your repos, e.g. http://my.org/repo
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            authentication {
+                basic(BasicAuthentication) {
+                    credentials {
+                        username = "$System.env.MOHSENOID_OSSRH_USERNAME"
+                        password = "$System.env.MOHSENOID_OSSRH_PASSWORD"
+                    }
+                }
+            }
+        }
+    }
 }
 
-javadocJar {
-    dependsOn(dokkaJavadoc)
-}
+setProperty("signing.keyId", "$System.env.MOHSENOID_SIGNING_KEY_ID")
+setProperty("signing.password", "$System.env.MOHSENOID_SIGNING_PASSWORD")
 
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_android_version"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_test_version"
-
-    implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
-
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$androidx_testext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_testespresso_version"
+signing {
+    sign publishing.publications.aar
 }
