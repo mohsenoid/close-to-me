@@ -19,7 +19,8 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        maven { setUrl("https://plugins.gradle.org/m2/") }
+        mavenCentral()
     }
     
     dependencies {
@@ -32,7 +33,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     tasks.withType(Javadoc).all {
