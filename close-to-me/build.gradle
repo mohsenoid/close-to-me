@@ -22,7 +22,7 @@ apply plugin: 'signing'
 apply from: "$rootDir/ktlint.gradle"
 
 group = "com.mohsenoid.${name}"
-version = "1.0.3"
+version = "1.0.4"
 description = "Android CloseToMe BLE Library"
 
 def siteUrl = "http://mohsenoid.com/${name}/"
@@ -36,7 +36,7 @@ android {
         minSdkVersion rootProject.ext.min_sdk_version
         targetSdkVersion rootProject.ext.compile_sdk_version
 
-        versionCode 4
+        versionCode 5
         versionName version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
