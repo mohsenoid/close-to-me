@@ -1,0 +1,175 @@
+/*
+ * Copyright 2021 Mohsen Mirhoseini
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+apply from: "$rootDir/ktlint.gradle"
+
+group = "com.mohsenoid.${name}"
+version = "1.0.4"
+description = "Android CloseToMe BLE Library"
+
+def siteUrl = "http://mohsenoid.com/${name}/"
+def gitUrl = "https://github.com/mohsenoid/${name}.git"
+
+android {
+    compileSdkVersion rootProject.ext.compile_sdk_version
+    resourcePrefix "closetome__"
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.min_sdk_version
+        targetSdkVersion rootProject.ext.compile_sdk_version
+
+        versionCode 5
+        versionName version
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        animationsDisabled true
+
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+}
+
+check.dependsOn ktlint
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_android_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_test_version"
+
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
+
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$androidx_testext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_testespresso_version"
+}
+
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier.set('sources')
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    archiveClassifier.set('javadoc')
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            aar(MavenPublication) {
+                groupId = project.group
+                artifactId = project.name
+                version = project.version
+
+                from components.findByName("release")
+
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom {
+                    name = project.name
+                    packaging = 'aar'
+                    description = project.description
+                    url = siteUrl
+
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'mohsenoid'
+                            name = 'Mohsen Mirhoseini'
+                            email = 'contact@mohsenoid.com'
+                        }
+                    }
+                    scm {
+                        connection = gitUrl
+                        developerConnection = gitUrl
+                        url = siteUrl
+                    }
+
+                    scm {
+                        connection = "scm:git:git://github.com/mohsenoid/${project.name}.git" as String
+                        developerConnection = "scm:git:ssh://github.com/mohsenoid/${project.name}.git" as String
+                        url = "http://mohsenoid.com/$project.name" as String
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                // change URLs to point to your repos, e.g. http://my.org/repo
+                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+                authentication {
+                    basic(BasicAuthentication) {
+                        credentials {
+                            username = "$System.env.MOHSENOID_OSSRH_USERNAME"
+                            password = "$System.env.MOHSENOID_OSSRH_PASSWORD"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    setProperty("signing.keyId", "$System.env.MOHSENOID_SIGNING_KEY_ID")
+    setProperty("signing.password", "$System.env.MOHSENOID_SIGNING_PASSWORD")
+
+    signing {
+        sign publishing.publications.aar
+    }
+}

@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright 2021 Mohsen Mirhoseini
   ~
@@ -16,14 +14,13 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mohsenoid.closetome">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Privacy changes in Android 10 requires ACCESS_FINE_LOCATION
+     https://developer.android.com/about/versions/10/privacy/changes -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-</resources>
+</manifest>

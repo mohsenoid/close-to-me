@@ -14,4 +14,11 @@
  * limitations under the License.
  */
 
-include ':sample-app', ':close-to-me'
+package com.mohsenoid.closetome
+
+interface CloseToMeCallback {
+
+    fun onSuccess()
+
+    fun onError(throwable: Throwable)
+}

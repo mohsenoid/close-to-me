@@ -14,4 +14,18 @@
  * limitations under the License.
  */
 
-include ':sample-app', ':close-to-me'
+package com.mohsenoid.closetome.model
+
+@ExperimentalUnsignedTypes
+data class Beacon(
+    val address: String,
+    val manufacturerUuid: String,
+    val major: UShort,
+    val minor: UShort,
+    val userUuid: String?,
+    val lastSeen: Long,
+    val distanceInMeter: Double,
+    val minDistanceInMeter: Double = Double.MAX_VALUE,
+    val isNear: Boolean,
+    var isVisible: Boolean
+)
