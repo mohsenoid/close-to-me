@@ -100,72 +100,76 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     archiveClassifier.set('javadoc')
 }
 
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
+afterEvaluate {
+    publishing {
+        publications {
+            aar(MavenPublication) {
+                groupId = project.group
+                artifactId = project.name
+                version = project.version
 
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId = project.group
-            artifactId = project.name
-            version = project.version
+                from components.findByName("release")
 
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-            artifact sourcesJar
-            artifact javadocJar
+                artifact sourcesJar
+                artifact javadocJar
 
-            pom {
-                name = project.name
-                packaging = 'aar'
-                description = project.description
-                url = siteUrl
-
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'mohsenoid'
-                        name = 'Mohsen Mirhoseini'
-                        email = 'contact@mohsenoid.com'
-                    }
-                }
-                scm {
-                    connection = gitUrl
-                    developerConnection = gitUrl
+                pom {
+                    name = project.name
+                    packaging = 'aar'
+                    description = project.description
                     url = siteUrl
+
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'mohsenoid'
+                            name = 'Mohsen Mirhoseini'
+                            email = 'contact@mohsenoid.com'
+                        }
+                    }
+                    scm {
+                        connection = gitUrl
+                        developerConnection = gitUrl
+                        url = siteUrl
+                    }
+
+                    scm {
+                        connection = "scm:git:git://github.com/mohsenoid/${project.name}.git" as String
+                        developerConnection = "scm:git:ssh://github.com/mohsenoid/${project.name}.git" as String
+                        url = "http://mohsenoid.com/$project.name" as String
+                    }
                 }
             }
         }
-    }
 
-    repositories {
-        maven {
-            // change URLs to point to your repos, e.g. http://my.org/repo
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+        repositories {
+            maven {
+                // change URLs to point to your repos, e.g. http://my.org/repo
+                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
-            authentication {
-                basic(BasicAuthentication) {
-                    credentials {
-                        username = "$System.env.MOHSENOID_OSSRH_USERNAME"
-                        password = "$System.env.MOHSENOID_OSSRH_PASSWORD"
+                authentication {
+                    basic(BasicAuthentication) {
+                        credentials {
+                            username = "$System.env.MOHSENOID_OSSRH_USERNAME"
+                            password = "$System.env.MOHSENOID_OSSRH_PASSWORD"
+                        }
                     }
                 }
             }
         }
     }
-}
 
-setProperty("signing.keyId", "$System.env.MOHSENOID_SIGNING_KEY_ID")
-setProperty("signing.password", "$System.env.MOHSENOID_SIGNING_PASSWORD")
+    setProperty("signing.keyId", "$System.env.MOHSENOID_SIGNING_KEY_ID")
+    setProperty("signing.password", "$System.env.MOHSENOID_SIGNING_PASSWORD")
 
-signing {
-    sign publishing.publications.aar
+    signing {
+        sign publishing.publications.aar
+    }
 }
